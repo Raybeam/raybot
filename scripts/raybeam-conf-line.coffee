@@ -6,4 +6,4 @@
 #
 module.exports = (robot) ->
   robot.respond /(conference|conf) me/i, (msg) ->
-    msg.send "1-866-546-3377 (H: 7940858) (P: 7666515)"
+    msg.send process.env.RAYBOT_CONFERENCE_LINE + " (H: 7940858) (P: 7666515)"
