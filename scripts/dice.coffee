@@ -35,7 +35,10 @@ stat = ->
 
 module.exports = (robot) ->
   robot.respond /roll (\d*d\d+( ?[\+\-] ?(\d*d)?\d)*)/i, (msg) ->
-    msg.send roll msg.match[1]
+    @robot.logger.debug "Message: " + msg.match[1]
+    result = roll msg.match[1]
+    @robot.logger.debug "Result: " + result
+    msg.send " " + result
 
   robot.respond /stat/i, (msg) ->
     msg.send stat()
@@ -49,4 +52,4 @@ module.exports = (robot) ->
 
     attrs = (attr + ": " + stat() for attr in ["STR", "DEX", "CON", "INT", "WIS", "CHA"]).join "\n"
     msg.reply "A " + my_race + " " + my_class + "\n" + attrs
-    
+
