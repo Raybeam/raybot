@@ -18,6 +18,14 @@ appendAmbush = (data, toUser, fromUser, message) ->
 
   data[toUser.name].push [fromUser.name, message]
 
+checkAmbushes = (data, forUser) ->
+  if (ambushes = data[forUser.name])
+    messages = ("#{forUser.name}: #{message} [#{from}]" for [from, message] in ambushes)
+    delete data[forUser.name]
+    messages
+  else
+    []
+
 module.exports = (robot) ->
   robot.brain.on 'loaded', =>
     robot.brain.data.ambushes ||= {}
@@ -35,7 +43,10 @@ module.exports = (robot) ->
 
   robot.hear /./i, (msg) ->
     return unless robot.brain.data.ambushes?
-    if (ambushes = robot.brain.data.ambushes[msg.message.user.name])
-      for ambush in ambushes
-        msg.send msg.message.user.name + ": " + ambush[1] + " [" + ambush[0] + "]"
-      delete robot.brain.data.ambushes[msg.message.user.name]
+    for ambush in (checkAmbushes robot.brain.data.ambushes, msg.message.user)
+      msg.send ambush
+  
+  robot.enter (msg) ->
+    return unless robot.brain.data.ambushes?
+    for ambush in (checkAmbushes robot.brain.data.ambushes, msg.message.user)
+      msg.send ambush
