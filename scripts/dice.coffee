@@ -50,4 +50,8 @@ module.exports = (robot) ->
 
     attrs = (attr + ": " + stat() for attr in ["STR", "DEX", "CON", "INT", "WIS", "CHA"]).join "\n"
     msg.reply "A " + my_race + " " + my_class + "\n" + attrs
+  
+  robot.respond /choose (.*)/, (msg) ->
+    choices = (word for word in msg.match[1].split(' ') when word.length > 0)
+    msg.reply(choose_from choices)
 
