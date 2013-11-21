@@ -5,6 +5,7 @@
 #   hubot roll <dice> - Rolls dice (1d20, 3d6 + 4, 2d8 - 1d5 + 1)
 #   hubot stat - Generates a Attribute Stat (4d6, drop lowest)
 #   hubot character - Generates Six Stats and Assigns them to Attributes
+#   hubot choose <things> - Replies with a random selection from a space-delimited list of things
 
 choose_from = (array) ->
   array[Math.floor(Math.random() * array.length)]
