@@ -1,6 +1,9 @@
 doge_image = ->
   "░░░░░░░░░░░░░░░▄░░░░░░░░░░░░░░▄░░░░░░░░░░\n░░░░░░░░░░░░░░▌▒█░░░░░░░░░░░▄▀▒▌░░░░░░░░░\n░░░░░░░░░░░░░░▌▒▒█░░░░░░░░▄▀▒▒▒▐░░░░░░░░░\n░░░░░░░░░░░░░▐▄▀▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐░░░░░░░░░\n░░░░░░░░░░░▄▄▀▒░▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐░░░░░░░░░\n░░░░░░░░░▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌░░░░░░░░░\n░░░░░░░░▐▒▒▒▄▄▒▒▒▒░░░▒▒▒▒▒▒▒▀▄▒▒▌░░░░░░░░\n░░░░░░░░▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐░░░░░░░░\n░░░░░░░▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌░░░░░░░\n░░░░░░░▌░▒▄██▄▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌░░░░░░░\n░░░░░░▀▒▀▐▄█▄█▌▄░▀▒▒░░░░░░░░░░▒▒▒▐░░░░░░░\n░░░░░░▐▒▒▐▀▐▀▒░▄▄▒▄▒▒▒▒▒▒░▒░▒░▒▒▒▒▌░░░░░░\n░░░░░░▐▒▒▒▀▀▄▄▒▒▒▄▒▒▒▒▒▒▒▒░▒░▒░▒▒▐░░░░░░░\n░░░░░░░▌▒▒▒▒▒▒▀▀▀▒▒▒▒▒▒░▒░▒░▒░▒▒▒▌░░░░░░░\n░░░░░░░▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▄▒▒▐░░░░░░░░\n░░░░░░░░▀▄▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▄▒▒▒▒▌░░░░░░░░\n░░░░░░░░░░▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀░░░░░░░░░\n░░░░░░░░░░░░▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀░░░░░░░░░░░\n░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▀▀░░░░░░░░░░░░░░"
 
+doge_indexes = ->
+  [36, 137, 183, 211, 267, 337, 366, 445, 492, 571, 618, 691, 720, 802, 849, 934, 978, 1045, 1083, 1147, 1212, 1288, 1326, 1393, 1455, 1528, 1566, 1624, 1692, 1753, 1803, 1882, 1938, 2005, 2046, 2134, 2181, 2248]
+
 synonyms_for = (api, msg, word, callback) ->
   amount_to_use = 4 + Math.floor(Math.random() * 5)
   some_synonyms = []
@@ -26,16 +29,19 @@ shibe = (word) ->
     return "such #{word}"
   return word
 
-splice_in = (main_string, inner_string) ->
+splice_in_at = (main_string, inner_string, indexes) ->
   if inner_string.length > main_string.length
     return inner_string
-  highest_position = main_string.length - inner_string.length
-  position = Math.floor(Math.random() * highest_position)
+  index = Math.floor(Math.random() * indexes.length)
+  position = indexes[index]
+  indexes.splice(index, 1)
+  console.log index
+  console.log position
   replaced_string = main_string.slice(position, position + inner_string.length)
+  console.log replaced_string
   if replaced_string.split('\n').length > 1
-    return splice_in(main_string, inner_string)
+    return splice_in_at(main_string, inner_string, indexes)
   return main_string.slice(0, position) + inner_string + main_string.slice(position + inner_string.length)
-
 
 all_synonyms_for = (api, msg, word, callback) ->
   synonyms = []
@@ -88,9 +94,10 @@ module.exports = (robot) ->
       return
     word = msg.match[1].trim()
     doge = doge_image()
+    indexes_to_use = doge_indexes().slice(0)
     synonyms_for(api_key, msg, word, (syns) ->
       for w in syns
-        doge = splice_in(doge, shibe(w))
-      doge = splice_in(doge, "wow")
+        doge = splice_in_at(doge, shibe(w), indexes_to_use)
+      doge = splice_in_at(doge, "wow", indexes_to_use)
       msg.send "\n" + doge
     )
