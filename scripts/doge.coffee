@@ -2,20 +2,32 @@ doge_image = ->
   "░░░░░░░░░░░░░░░▄░░░░░░░░░░░░░░▄░░░░░░░░░░\n░░░░░░░░░░░░░░▌▒█░░░░░░░░░░░▄▀▒▌░░░░░░░░░\n░░░░░░░░░░░░░░▌▒▒█░░░░░░░░▄▀▒▒▒▐░░░░░░░░░\n░░░░░░░░░░░░░▐▄▀▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐░░░░░░░░░\n░░░░░░░░░░░▄▄▀▒░▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐░░░░░░░░░\n░░░░░░░░░▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌░░░░░░░░░\n░░░░░░░░▐▒▒▒▄▄▒▒▒▒░░░▒▒▒▒▒▒▒▀▄▒▒▌░░░░░░░░\n░░░░░░░░▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐░░░░░░░░\n░░░░░░░▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌░░░░░░░\n░░░░░░░▌░▒▄██▄▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌░░░░░░░\n░░░░░░▀▒▀▐▄█▄█▌▄░▀▒▒░░░░░░░░░░▒▒▒▐░░░░░░░\n░░░░░░▐▒▒▐▀▐▀▒░▄▄▒▄▒▒▒▒▒▒░▒░▒░▒▒▒▒▌░░░░░░\n░░░░░░▐▒▒▒▀▀▄▄▒▒▒▄▒▒▒▒▒▒▒▒░▒░▒░▒▒▐░░░░░░░\n░░░░░░░▌▒▒▒▒▒▒▀▀▀▒▒▒▒▒▒░▒░▒░▒░▒▒▒▌░░░░░░░\n░░░░░░░▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▄▒▒▐░░░░░░░░\n░░░░░░░░▀▄▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▄▒▒▒▒▌░░░░░░░░\n░░░░░░░░░░▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀░░░░░░░░░\n░░░░░░░░░░░░▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀░░░░░░░░░░░\n░░░░░░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒▀▀░░░░░░░░░░░░░░"
 
 doge_indexes = ->
-  [36, 137, 183, 211, 267, 337, 366, 445, 492, 571, 618, 691, 720, 802, 849, 934, 978, 1045, 1083, 1147, 1212, 1288, 1326, 1393, 1455, 1528, 1566, 1624, 1692, 1753, 1803, 1882, 1938, 2005, 2046, 2134, 2181, 2248]
+  [12, 47, 63, 73, 93, 117, 128, 155, 172, 199, 216, 241, 252, 280, 297, 326, 342, 365, 379, 401, 424, 450, 464, 487, 509, 534, 548, 568, 592, 613, 631, 658, 678, 701, 716, 746, 763, 786]
+
+all_synonyms_for = (api, msg, word, callback) ->
+  synonyms = []
+  msg.http("http://words.bighugelabs.com/api/2/#{api}/#{word}/json").get() (err, res, body) ->
+    if body? and body != ""
+      data = JSON.parse(body)
+      for type in ["noun", "verb", "adjective", "adverb"]
+        attr = data[type]
+        if attr?
+          syns = attr.syn
+          if syns?
+            synonyms = synonyms.concat(syns)
+      callback(synonyms)
 
 synonyms_for = (api, msg, word, callback) ->
   amount_to_use = 4 + Math.floor(Math.random() * 5)
   some_synonyms = []
   all_synonyms_for(api, msg, word, (synonyms) ->
-    while amount_to_use > 0
+    while amount_to_use > 0 and synonyms.length > 0
       index = Math.floor(Math.random() * synonyms.length)
       some_synonyms.push(synonyms[index])
       synonyms.splice(index, 1)
       amount_to_use -= 1
     callback(some_synonyms)
   )
-
 
 shibe = (word) ->
   roll = Math.floor(Math.random() * 10)
@@ -35,26 +47,11 @@ splice_in_at = (main_string, inner_string, indexes) ->
   index = Math.floor(Math.random() * indexes.length)
   position = indexes[index]
   indexes.splice(index, 1)
-  console.log index
-  console.log position
   replaced_string = main_string.slice(position, position + inner_string.length)
-  console.log replaced_string
   if replaced_string.split('\n').length > 1
     return splice_in_at(main_string, inner_string, indexes)
   return main_string.slice(0, position) + inner_string + main_string.slice(position + inner_string.length)
 
-all_synonyms_for = (api, msg, word, callback) ->
-  synonyms = []
-  msg.http("http://words.bighugelabs.com/api/2/#{api}/#{word}/json").get() (err, res, body) ->
-    if body? and body != ""
-      data = JSON.parse(body)
-      for type in ["noun", "verb", "adjective", "adverb"]
-        attr = data[type]
-        if attr?
-          syns = attr.syn
-          if syns?
-            synonyms = synonyms.concat(syns)
-      callback(synonyms)
 
 module.exports = (robot) ->
   robot.brain.on 'loaded', =>
