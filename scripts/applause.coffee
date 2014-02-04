@@ -1,5 +1,3 @@
-sleep = require("sleep")
-
 # Description:
 #   Congratulate a user on their achievement
 #
@@ -35,7 +33,6 @@ module.exports = (robot) ->
     
     msg.send "And the award for #{msg.match[2]} goes to..."
     msg.send "(drum roll)"
-    sleep.sleep(2)
     if user.name is null
       msg.send "... I'm sorry. This is odd. There's no name written in this envelope."
     else
