@@ -104,5 +104,6 @@ module.exports = (robot) ->
       for w in syns
         doge = splice_in_at(doge, shibe(w), indexes_to_use)
       doge = splice_in_at(doge, "wow", indexes_to_use)
+      doge = splice_in_at(doge, word, indexes_to_use)
       msg.send "\n" + doge
     )
