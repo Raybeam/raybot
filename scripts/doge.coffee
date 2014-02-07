@@ -65,9 +65,6 @@ splice_in_at = (main_string, inner_string, indexes) ->
 
 
 module.exports = (robot) ->
-  robot.brain.on 'loaded', =>
-    robot.brain.data.thesaurus_api = ""
-
   robot.respond /set thesaurus (.+)/i, (msg) ->
     robot.brain.data.thesaurus_api = msg.match[1].trim()
     msg.send "Setting thesaurus api to " + robot.brain.data.thesaurus_api
