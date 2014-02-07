@@ -31,11 +31,15 @@ module.exports = (robot) ->
     else
       user = { name: null }
     
-    msg.send "And the award for #{msg.match[2]} goes to..."
-    msg.send "(drum roll)"
+    response = []
+    
+    response.push "And the award for #{msg.match[2]} goes to..."
+    response.push "(drum roll)"
     if user.name is null
-      msg.send "... I'm sorry. This is odd. There's no name written in this envelope."
+      response.push "... I'm sorry. This is odd. There's no name written in this envelope."
     else
-      msg.send "#{user.name}!"
-      msg.send msg.random applause
-      msg.send "This is #{user.name}'s #{msg.random ['first', 'second', 'third']} win."
+      response.push "#{user.name}!"
+      response.push msg.random applause
+      response.push "This is #{user.name}'s #{msg.random ['first', 'second', 'third']} win."
+    
+    msg.send response...
