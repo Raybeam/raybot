@@ -1,1 +1,2 @@
-web: bin/hubot -a campfire -n Raybot
+web: bin/hubot --adapter hipchat -n Raybot
+
