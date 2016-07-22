@@ -18,7 +18,9 @@ before deploying.
 Create a new file in `raybot/commands/`.  Use the existing files to get started.
 
 ##Running Locally
-`foreman start`
+1. make sure .env exists in the root directory with `SLACK_API_TOKEN=token` in
+it.
+1. `foreman start`
 
 ##Deploying
 1. Be a collaborator on the raybot-slack heroku instance. (ask other developers)
