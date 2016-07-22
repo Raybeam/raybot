@@ -1,2 +1,1 @@
-web: bin/hubot --adapter hipchat -n Raybot
-
+web: bundle exec puma -p $PORT
