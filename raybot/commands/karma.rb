@@ -64,10 +64,12 @@ module RayBot
       HELPTEXT
 
       scan (/(\(.+?\)|@?\S+?)([+-]+)/) do |client, data, matches|
+        web_client = Slack::Web::Client.new
+        user_name = web_client.users_info(user: data.user).user.name
         matches.each do |target, modspec|
           karma = Karma.new(target)
-          if karma.target == data.user
-            client.say(channel: data.channel, text: "You can't give youreself karma. That's not how this works.")
+          if karma.target == user_name
+            client.say(channel: data.channel, text: "You can't give yourself karma. That's not how this works.")
           else
             operations = modspec.each_char.sort.uniq
             if operations == ['+']
