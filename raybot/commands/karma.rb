@@ -45,7 +45,7 @@ module RayBot
     end
 
     def redis
-      @redis ||= Redis.new(ENV['REDISTOGO_URL'])
+      @redis ||= Redis.new(url: ENV['REDISTOGO_URL'])
     end
   end
 
