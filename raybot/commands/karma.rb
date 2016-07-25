@@ -65,7 +65,7 @@ module RayBot
         | To check karma, use the !karma command: `!karma something`
       HELPTEXT
 
-      scan (/(\(.+?\)|@?\S+?)([+-]+)/) do |client, data, matches|
+      scan (/(\(.+?\)|@?\S+?)([+-]{2,})/) do |client, data, matches|
         web_client = Slack::Web::Client.new
         user_name = web_client.users_info(user: data.user).user.name
         matches.each do |target, modspec|
