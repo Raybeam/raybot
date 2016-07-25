@@ -54,12 +54,14 @@ module RayBot
       HELP = <<-HELPTEXT.gsub(/^\s*\|/, '')
         | This bot tracks karma (imaginary internet points).
         |
+        | *Giving Karma*
         | To give positive karma to something, include `something++` anywhere in a message.
         | For negative karma, use `something--`, and for neutral (meh) karma, `something+-`.
         |
         | To include spaces, use parentheses: `(something with parentheses)++`.
         | Don't try to get too clever, though. Nested parentheses won't work.
         |
+        | *Checking Karma*
         | To check karma, use the !karma command: `!karma something`
       HELPTEXT
 
