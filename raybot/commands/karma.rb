@@ -16,20 +16,42 @@ module RayBot
       redis.incr key(:negative)
     end
 
-    def report
+    def attachment
       pos = redis.get(key(:positive)).to_i
       neg = redis.get(key(:negative)).to_i
+      total = pos + neg
+      karma_description = [
+        'karma',
+        'imaginary internet points',
+        'warm fuzzy feelings',
+        'coupons redeemable for 1g of ambient oxygen'
+      ].sample
 
       if [pos, neg] == [0, 0]
-        "#{@target} has no karma."
+        {
+          fallback: "#{@target} has no #{karma_description}.",
+          title: @target,
+          text: "#{@target} has no #{karma_description}.",
+          color: '#888888'
+        }
       else
-        "%s's karma is %d (%d++, %d--) +/- ratio: %.3f" % [
-          @target,
-          pos - neg,
-          pos,
-          neg,
-          pos.to_f / neg.to_f
-        ]
+        {
+          fallback: "#{@target}'s has #{pos - neg} #{karma_description} (#{pos}++, #{neg}--).",
+          title: "#{@target} has #{pos - neg} #{karma_description}",
+          fields: [
+            {
+              title: 'Positive (++)',
+              value: "%d (%.1f%%)" % [pos, (pos.to_f / total.to_f * 100)],
+              short: true
+            },
+            {
+              title: 'Negative (--)',
+              value: "%d (%.1f%%)" % [neg, (neg.to_f / total.to_f * 100)],
+              short: true
+            }
+          ],
+          color: ((pos >= neg) ? 'good' : 'danger')
+        }
       end
     end
 
@@ -78,7 +100,11 @@ module RayBot
 
       match (/^!karma\s+(?<target>.+)$/) do |client, data, match|
         karma = Karma.new(match['target'])
-        client.say(channel: data.channel, text: karma.report)
+        client.web_client.chat_postMessage(
+          channel: data.channel,
+          as_user: true,
+          attachments: [karma.attachment]
+        )
       end
 
       match (/^!karma(|help)$/i) do |client, data, match|
