@@ -16,24 +16,18 @@ module RayBot
       redis.incr key(:negative)
     end
 
-    def neutral!
-      redis.incr key(:neutral)
-    end
-
     def report
       pos = redis.get(key(:positive)).to_i
       neg = redis.get(key(:negative)).to_i
-      neu = redis.get(key(:neutral)).to_i
 
-      if [pos, neg, neu] == [0, 0, 0]
+      if [pos, neg] == [0, 0]
         "#{@target} has no karma."
       else
-        "%s's karma is %d (%d++, %d--, %d+-) +/- ratio: %.3f" % [
+        "%s's karma is %d (%d++, %d--) +/- ratio: %.3f" % [
           @target,
           pos - neg,
           pos,
           neg,
-          neu,
           pos.to_f / neg.to_f
         ]
       end
@@ -56,7 +50,7 @@ module RayBot
         |
         | *Giving Karma*
         | To give positive karma to something, include `something++` anywhere in a message.
-        | For negative karma, use `something--`, and for neutral (meh) karma, `something+-`.
+        | For negative karma, use `something--`.
         |
         | To include spaces, use parentheses: `(something with parentheses)++`.
         | Don't try to get too clever, though. Nested parentheses won't work.
@@ -65,21 +59,18 @@ module RayBot
         | To check karma, use the !karma command: `!karma something`
       HELPTEXT
 
-      scan (/(\(.+?\)|@?\S+?)([+-]{2,})/) do |client, data, matches|
-        web_client = Slack::Web::Client.new
-        user_name = web_client.users_info(user: data.user).user.name
+      scan (/(\(.+?\)|@?\S+?)(\+{2,}|-{2,})/) do |client, data, matches|
+        user_name = client.web_client.users_info(user: data.user).user.name
         matches.each do |target, modspec|
           karma = Karma.new(target)
           if karma.target == user_name
             client.say(channel: data.channel, text: "You can't give yourself karma. That's not how this works.")
           else
-            operations = modspec.each_char.sort.uniq
-            if operations == ['+']
+            operation = modspec[0]
+            if operation == '+'
               karma.positive!
-            elsif operations == ['-']
+            elsif operation == '-'
               karma.negative!
-            elsif operations == ['+', '-']
-              karma.neutral!
             end
           end
         end
