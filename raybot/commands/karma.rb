@@ -36,7 +36,7 @@ module RayBot
         }
       else
         {
-          fallback: "#{@target}'s has #{pos - neg} #{karma_description} (#{pos}++, #{neg}--).",
+          fallback: "#{@target} has #{pos - neg} #{karma_description} (#{pos}++, #{neg}--).",
           title: "#{@target} has #{pos - neg} #{karma_description}",
           fields: [
             {
