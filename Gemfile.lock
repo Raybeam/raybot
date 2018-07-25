@@ -47,7 +47,7 @@ GEM
     nio4r (2.2.0)
     puma (3.11.3)
     rack (2.0.4)
-    rack-protection (2.0.1)
+    rack-protection (2.0.3)
       rack
     rack-test (0.8.3)
       rack (>= 1.0, < 3)
@@ -66,10 +66,10 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
-    sinatra (2.0.1)
+    sinatra (2.0.3)
       mustermann (~> 1.0)
       rack (~> 2.0)
-      rack-protection (= 2.0.1)
+      rack-protection (= 2.0.3)
       tilt (~> 2.0)
     slack-ruby-bot (0.10.5)
       hashie
@@ -104,8 +104,8 @@ DEPENDENCIES
   rake
   redis
   rspec
-  sinatra
+  sinatra (~> 2.0.2)
   slack-ruby-bot
 
 BUNDLED WITH
-   1.16.1
+   1.16.3
