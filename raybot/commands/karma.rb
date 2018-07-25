@@ -16,7 +16,7 @@ module RayBot
       redis.incr key(:negative)
     end
 
-    def attachment
+    def message
       pos = redis.get(key(:positive)).to_i
       neg = redis.get(key(:negative)).to_i
       total = pos + neg
@@ -28,16 +28,28 @@ module RayBot
       ].sample
 
       if [pos, neg] == [0, 0]
+        "no #{karma_description}."
+      else
+        "#{pos - neg} #{karma_description} (#{pos}++, #{neg}--)."
+      end
+    end
+
+    def attachment
+      pos = redis.get(key(:positive)).to_i
+      neg = redis.get(key(:negative)).to_i
+      total = pos + neg
+
+      if [pos, neg] == [0, 0]
         {
-          fallback: "#{@target} has no #{karma_description}.",
+          fallback: "#{@target} #{@message}",
           title: @target,
-          text: "#{@target} has no #{karma_description}.",
+          text: "#{@target}  #{@message}.",
           color: '#888888'
         }
       else
         {
-          fallback: "#{@target} has #{pos - neg} #{karma_description} (#{pos}++, #{neg}--).",
-          title: "#{@target} has #{pos - neg} #{karma_description}",
+          fallback: "#{@target} has #{@message} (#{pos}++, #{neg}--).",
+          title: "#{@target} has #{@message}",
           fields: [
             {
               title: 'Positive (++)',
@@ -91,9 +103,16 @@ module RayBot
             operation = modspec[0]
             if operation == '+'
               karma.positive!
+              face = ":good-dog:"
             elsif operation == '-'
               karma.negative!
+              face = ":brady:"
             end
+            client.web_client.chat_postMessage(
+              channel: data.channel,
+              as_user: true,
+              text: "#{karma.target} now has #{karma.message} #{face}",
+            )
           end
         end
       end
