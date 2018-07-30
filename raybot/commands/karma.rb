@@ -94,6 +94,9 @@ module RayBot
       HELPTEXT
 
       scan (/(\(.+?\)|@?\S+?)(\+{2,}|-{2,})/) do |client, data, matches|
+        if data.text.include?('`') # Ignore code blocks.
+          return
+        end
         user_name = client.web_client.users_info(user: data.user).user.name
         matches.each do |target, modspec|
           karma = Karma.new(target)
