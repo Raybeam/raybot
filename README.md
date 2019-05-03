@@ -1,4 +1,4 @@
-#Raybot
+# Raybot
 
 Raybot, re-implemented for [Slack](http://raybeam.slack.com)!
 
