@@ -18,7 +18,7 @@ module RayBot
   module Commands
     class AtmeCommands < SlackRubyBot::Commands::Base
       match (/^mike me$/) do |client, data, match|
-        client.say(channel: data.channel, text: match[:name])
+        client.say(channel: data.channel, text: '@Mike H')
       end
 
       match (/^mike bomb (?<count>\d+)$/) do |client, data, match|
