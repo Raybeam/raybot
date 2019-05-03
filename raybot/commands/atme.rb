@@ -17,14 +17,14 @@ require 'redis'
 module RayBot
   module Commands
     class AtmeCommands < SlackRubyBot::Commands::Base
-      match (/^mike me$/) do |client, data, match|
-        client.say(channel: data.channel, text: '@Mike H')
+      match (/^(?<name>.*) me$/) do |client, data, match|
+        client.say(channel: data.channel, text: match[:name])
       end
 
-      match (/^mike bomb (?<count>\d+)$/) do |client, data, match|
+      match (/^(?<name>.*) bomb (?<count>\d+)$/) do |client, data, match|
         count = [match[:count].to_i, 100].min
         count.times do
-          client.say(channel: data.channel, text: 'aloha @Mike H')
+          client.say(channel: data.channel, text: 'aloha ' + match[:name])
         end
       end
     end
