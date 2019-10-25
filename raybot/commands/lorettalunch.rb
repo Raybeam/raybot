@@ -28,19 +28,16 @@ module RayBot
         special_response = special_http.request(special_request)
         specials = special_response.body.split("<tr>")
 
-        meal_url = nil
         for meal in meals
           if meal["start"] == date and meal["restaurant"] == "Loretta"
             for special in specials
               if special.include? date and special.downcase.include? "lunch"
                 meal_url = "http://lorettarestaurant.com/specials/" + special.match('(?<=<a href=\")[^"]+(?=\")')[0]
+                client.say(channel: "lunch", text: meal_url)
+                redis.set(k, meal_url)
               end
             end
           end
-        end
-        if meal_url
-          client.say(channel: "lunch", text: meal_url)
-          redis.set(k, meal_url)
         end
       end
     end
