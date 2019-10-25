@@ -33,11 +33,11 @@ module RayBot
         end
 
         if not meal_today
-          client.say(channel: data.channel, text: "There is no lunch for today!")
+          client.say(channel: "C1TUV5XFA", text: "There is no lunch for today!")
         elsif waiting_on.empty?
-          client.say(channel: data.channel, text: "All lunches are in!")
+          client.say(channel: "C1TUV5XFA", text: "All lunches are in!")
         else
-          client.say(channel: data.channel, text: "WAITING ON: " + waiting_on.join(', '))
+          client.say(channel: "C1TUV5XFA", text: "WAITING ON: " + waiting_on.join(', '))
         end
       end
     end
