@@ -6,6 +6,7 @@ gem 'sinatra', '~> 2.0.2'
 gem 'dotenv'
 gem 'celluloid-io'
 gem 'redis'
+gem 'nokogiri'
 
 group :development, :test do
   gem 'rake'
