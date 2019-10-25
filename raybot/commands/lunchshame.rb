@@ -30,7 +30,7 @@ module RayBot
           end
         end
 
-        client.say(channel: data.channel, text: "WAITING ON: " + waiting_on.join(', '))
+        client.say(channel: "C1TUV5XFA", text: "WAITING ON: " + waiting_on.join(', '))
       end
     end
   end
