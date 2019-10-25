@@ -4,11 +4,12 @@ require "redis"
 module RayBot
   module Commands
     class LorettaLunch < SlackRubyBot::Commands::Base
-      command 'lorettalunch' do |client, data, match|
+      match (/^(lorettalunch)$/) do |client, data, match|
         redis = Redis.new(url: ENV['REDISTOGO_URL'])
         base_url = "http://samaya.raybeam.com/meal_events/lunch_list?end=2000-01-01&start="
         date = Time.now.strftime("%Y-%m-%d")
         k = "lorettalunch:" + date
+        client.say(channel: data.channel, text: k)
 
         # Exit if the URL has already been found.
         break if redis.get(k)
