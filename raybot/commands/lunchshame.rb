@@ -25,7 +25,7 @@ module RayBot
             event_html = event_response.body.delete("\n")
             order_status = event_html.match("<table class='order-status'>((?!table).)*</table>")[0]
             for order in order_status.split("<td>")
-              if order.include? "first pending" && not order.include? "Dong Soo Anderson-Song"
+              if (order.include? "first pending") && (not order.include? "Dong Soo Anderson-Song")
                 waiting_on.append(order.match('<a href=[^>]*>([^<]*)<')[1])
               end
             end
