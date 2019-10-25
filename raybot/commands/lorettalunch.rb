@@ -19,8 +19,7 @@ module RayBot
         special_http = Net::HTTP.new(special_uri.host, special_uri.port)
         special_request = Net::HTTP::Get.new(special_uri.request_uri)
         special_response = special_http.request(special_request)
-        specials = special_response.body.split("</tr>
-        <tr>")
+        specials = special_response.body.split("<tr>")
 
         meal_url = "Loretta isn't for lunch today!"
         for meal in meals
