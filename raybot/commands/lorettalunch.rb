@@ -23,7 +23,7 @@ module RayBot
 
         meal_url = "Loretta isn't for lunch today!"
         for meal in meals
-          if meal["start"] == date
+          if meal["start"] == date and meal["restaurant"] == "Loretta"
             meal_url = "Today's specials are not yet posted."
             for special in specials
               if special.include? date and special.downcase.include? "lunch"
