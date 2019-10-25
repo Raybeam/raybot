@@ -1,5 +1,5 @@
 require "net/http"
-#require "redis"
+require "redis"
 
 module RayBot
   module Commands
@@ -7,7 +7,7 @@ module RayBot
       command 'lorettalunch' do |client, data, match|
         base_url = "http://samaya.raybeam.com/meal_events/lunch_list?end=2000-01-01&start="
         date = Time.now.strftime("%Y-%m-%d")
-        #k = "lorettalunch" + date
+        k = "lorettalunch" + date
 
         # Exit if the URL has already been found.
         # if redis.get(k)
