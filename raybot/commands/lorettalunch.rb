@@ -10,7 +10,6 @@ module RayBot
         date = Time.now.strftime("%Y-%m-%d")
         k = "loretta-lunch-" + date
         client.say(channel: data.channel, text: k)
-        client.say(channel: data.channel, text: data.channel)
 
         # Exit if the URL has already been found.
         break if redis.get(k)
