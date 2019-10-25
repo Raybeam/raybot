@@ -22,18 +22,18 @@ module RayBot
         specials = response.body.split("</tr>
         <tr>")
 
-        response = "Loretta isn't for lunch today!"
+        meal_url = "Loretta isn't for lunch today!"
         for meal in meals
           if meal["start"] == date
             for special in specials
               if special.include? date and special.downcase.include? "lunch"
-                response = "http://lorettarestaurant.com/specials/" + special.match('(?<=<a href=\")[^"]+(?=\")')[0]
+                meal_url = "http://lorettarestaurant.com/specials/" + special.match('(?<=<a href=\")[^"]+(?=\")')[0]
               end
             end
           end
         end
 
-        client.say(channel: data.channel, text: response)
+        client.say(channel: data.channel, text: meal_url)
       end
     end
   end
