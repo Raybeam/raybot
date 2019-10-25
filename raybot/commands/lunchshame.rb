@@ -1,5 +1,4 @@
 require "net/http"
-require 'nokogiri'
 
 module RayBot
   module Commands
@@ -21,16 +20,16 @@ module RayBot
             event_http = Net::HTTP.new(event_uri.host, event_uri.port)
             event_request = Net::HTTP::Get.new(event_uri.request_uri)
             event_response = meal_http.request(event_request)
-            event_html = Nokogiri::HTML.parse(event_response.body)
-            for person in event_html.children[1].children[3].children[3].children[7].children
-              if person.inner_html.include? "pending"
-                if person.inner_html.include? "first pending"
-                  waiting_on.append(person.children[1].content)
-                end
+            event_html = event_response.body.delete("\n")
+            order_status = event_html.match("<table class='order-status'>((?!table).)*</table>")[0]
+            for order in order_status.split("<td>")
+              if order.include? "first pending"
+                waiting_on.append(order.match('<a href=[^>]*>([^<]*)<')[1])
               end
             end
           end
         end
+
         client.say(channel: data.channel, text: "WAITING ON: " + waiting_on.join(', '))
       end
     end
