@@ -10,9 +10,9 @@ module RayBot
         k = "lorettalunch" + date
 
         # Exit if the URL has already been found.
-        # if redis.get(k)
-        #   client.say(channel: data.channel, text: "Already posted the URL. Scroll up!")
-        # end
+        if redis.get(k)
+          client.say(channel: data.channel, text: "Already posted the URL. Scroll up!")
+        end
 
         meal_uri = URI.parse(base_url + date)
         meal_http = Net::HTTP.new(meal_uri.host, meal_uri.port)
