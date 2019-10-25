@@ -28,7 +28,7 @@ module RayBot
             meal_url = "Today's specials are not yet posted."
             for special in specials
               if special.include? date and special.downcase.include? "lunch"
-                meal_url = "http://lorettarestaurant.com/specials/" + special.match('(?<=<a href=\")[^"]+(?=\")')[0]
+                #meal_url = "http://lorettarestaurant.com/specials/" + special.match('(?<=<a href=\")[^"]+(?=\")')[0]
                 meal_url = special
               end
             end
