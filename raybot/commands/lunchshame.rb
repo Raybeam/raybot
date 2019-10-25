@@ -23,6 +23,7 @@ module RayBot
             event_request = Net::HTTP::Get.new(event_uri.request_uri)
             event_response = meal_http.request(event_request)
             event_html = event_response.body.delete("\n")
+            picker = event_html.match('<span class="resource">(((?!span).)*)</span>')[1]
             order_status = event_html.match("<table class='order-status'>((?!table).)*</table>")[0]
             for order in order_status.split("<td>")
               if (order.include? "first pending") && (not order.include? "Dong Soo Anderson-Song")
@@ -32,6 +33,7 @@ module RayBot
           end
         end
 
+        client.say(channel: "C1TUV5XFA", text: picker + " is picking up today.")
         if not meal_today
           client.say(channel: "C1TUV5XFA", text: "There is no lunch for today!")
         elsif waiting_on.empty?
