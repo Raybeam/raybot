@@ -7,18 +7,18 @@ module RayBot
         base_url = "http://samaya.raybeam.com/meal_events/lunch_list?end=2000-01-01&start="
         date = Time.now.strftime("%Y-%m-%d")
 
-        uri = URI.parse(base_url + date)
-        http = Net::HTTP.new(uri.host, uri.port)
-        request = Net::HTTP::Get.new(uri.request_uri)
-        response = http.request(request)
+        meal_uri = URI.parse(base_url + date)
+        meal_http = Net::HTTP.new(uri.host, uri.port)
+        meal_request = Net::HTTP::Get.new(uri.request_uri)
+        meal_response = http.request(request)
         meals = JSON.parse(response.body)
 
         specials_url = "http://lorettarestaurant.com/specials/?C=M;O=D"
 
-        uri = URI.parse(specials_url)
-        http = Net::HTTP.new(uri.host, uri.port)
-        request = Net::HTTP::Get.new(uri.request_uri)
-        response = http.request(request)
+        special_uri = URI.parse(specials_url)
+        special_http = Net::HTTP.new(uri.host, uri.port)
+        special_request = Net::HTTP::Get.new(uri.request_uri)
+        special_response = http.request(request)
         specials = response.body.split("</tr>
         <tr>")
 
