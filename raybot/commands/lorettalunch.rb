@@ -8,9 +8,9 @@ module RayBot
         base_url = "http://samaya.raybeam.com/meal_events/lunch_list?end=2000-01-01&start="
         date = Time.now.strftime("%Y-%m-%d")
         key = "lorettalunch" + date
-        
+
         # Exit if the URL has already been found.
-        break if redis.get(key)
+        # break if redis.get(key)
 
         meal_uri = URI.parse(base_url + date)
         meal_http = Net::HTTP.new(meal_uri.host, meal_uri.port)
