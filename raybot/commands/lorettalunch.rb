@@ -3,7 +3,7 @@ require "net/http"
 module RayBot
   module Commands
     class LorettaLunch < SlackRubyBot::Commands::Base
-      match (^!lorettalunch$/i) do |client, data, match|
+      command 'lorettalunch' do |client, data, match|
         base_url = "http://samaya.raybeam.com/meal_events/lunch_list?end=2000-01-01&start="
         date = Time.now.strftime("%Y-%m-%d")
 
