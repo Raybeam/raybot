@@ -13,9 +13,9 @@ module RayBot
         response = http.request(request)
         meals = JSON.parse(response.body)
 
-        specials = "http://lorettarestaurant.com/specials/?C=M;O=D"
+        specials_url = "http://lorettarestaurant.com/specials/?C=M;O=D"
 
-        uri = URI.parse(specials)
+        uri = URI.parse(specials_url)
         http = Net::HTTP.new(uri.host, uri.port)
         request = Net::HTTP::Get.new(uri.request_uri)
         response = http.request(request)
