@@ -14,10 +14,10 @@ module RayBot
         meals = JSON.parse(meal_response.body)
 
         waiting_on = []
-        meal_today = FALSE
+        meal_today = false
         for meal in meals
           if meal["start"] == date
-            meal_today = TRUE
+            meal_today = true
             event_uri = URI.parse("http://samaya.raybeam.com" + meal["url"])
             event_http = Net::HTTP.new(event_uri.host, event_uri.port)
             event_request = Net::HTTP::Get.new(event_uri.request_uri)
