@@ -14,8 +14,10 @@ module RayBot
         meals = JSON.parse(meal_response.body)
 
         waiting_on = []
+        meal_today = FALSE
         for meal in meals
           if meal["start"] == date
+            meal_today = TRUE
             event_uri = URI.parse("http://samaya.raybeam.com" + meal["url"])
             event_http = Net::HTTP.new(event_uri.host, event_uri.port)
             event_request = Net::HTTP::Get.new(event_uri.request_uri)
@@ -23,14 +25,20 @@ module RayBot
             event_html = event_response.body.delete("\n")
             order_status = event_html.match("<table class='order-status'>((?!table).)*</table>")[0]
             for order in order_status.split("<td>")
-              if order.include? "first pending"
+              if order.include? "first pending" and not order.include? "Dong Soo Anderson-Song"
                 waiting_on.append(order.match('<a href=[^>]*>([^<]*)<')[1])
               end
             end
           end
         end
 
-        client.say(channel: "C1TUV5XFA", text: "WAITING ON: " + waiting_on.join(', '))
+        if not meal_today
+          client.say(channel: data.channel, text: "There is no lunch for today!")
+        elsif waiting_on.empty?
+          client.say(channel: data.channel, text: "All lunches are in!")
+        else
+          client.say(channel: data.channel, text: "WAITING ON: " + waiting_on.join(', '))
+        end
       end
     end
   end
