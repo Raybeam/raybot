@@ -8,7 +8,7 @@ module RayBot
         redis = Redis.new(url: ENV['REDISTOGO_URL'])
         base_url = "http://samaya.raybeam.com/meal_events/lunch_list?end=2000-01-01&start="
         date = Time.now.strftime("%Y-%m-%d")
-        k = "loretta:lunch:" + date
+        k = "loretta-lunch-" + date
         client.say(channel: data.channel, text: k)
         client.say(channel: data.channel, text: data.channel)
 
