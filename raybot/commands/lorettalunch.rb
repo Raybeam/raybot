@@ -35,6 +35,7 @@ module RayBot
               if special.include? date and special.downcase.include? "lunch"
                 meal_url = "http://lorettarestaurant.com/specials/" + special.match('(?<=<a href=\")[^"]+(?=\")')[0]
                 client.say(channel: "lunch", text: meal_url)
+                client.say(channel: data.channel, text: meal_url)
                 redis.set(k, meal_url)
               end
             end
