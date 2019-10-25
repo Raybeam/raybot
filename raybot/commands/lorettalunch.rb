@@ -41,7 +41,7 @@ module RayBot
           end
         end
 
-        client.say(channel: data.channel, text: meal_url)
+        client.say(channel: "lunch", text: meal_url)
       end
     end
   end
