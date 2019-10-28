@@ -9,7 +9,6 @@ module RayBot
         base_url = "http://samaya.raybeam.com/meal_events/lunch_list?end=2000-01-01&start="
         date = Time.now.strftime("%Y-%m-%d")
         k = "loretta-lunch-" + date
-        client.say(channel: data.channel, text: k)
 
         # Exit if the URL has already been found.
         break if redis.get(k)
@@ -34,7 +33,6 @@ module RayBot
               if (special.include? date) && (special.downcase.include? "lunch")
                 meal_url = "http://lorettarestaurant.com/specials/" + special.match('(?<=<a href=\")[^"]+(?=\")')[0]
                 client.say(channel: "C1TUV5XFA", text: meal_url)
-                client.say(channel: data.channel, text: meal_url)
                 redis.set(k, meal_url)
               end
             end
