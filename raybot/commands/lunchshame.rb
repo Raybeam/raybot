@@ -15,9 +15,11 @@ module RayBot
 
         waiting_on = []
         meal_today = false
+        restaurant_name = ""
         for meal in meals
           if meal["start"] == date
             meal_today = true
+            restaurant_name = meal["restaurant"] + " "
             event_uri = URI.parse("http://samaya.raybeam.com" + meal["url"])
             event_http = Net::HTTP.new(event_uri.host, event_uri.port)
             event_request = Net::HTTP::Get.new(event_uri.request_uri)
@@ -32,11 +34,14 @@ module RayBot
             end
           end
         end
-
-        client.say(channel: "C1TUV5XFA", text: picker + " is picking up today.")
-        if not meal_today
+        
+        unless meal_today
           client.say(channel: "C1TUV5XFA", text: "There is no lunch for today!")
-        elsif waiting_on.empty?
+          return
+        end
+
+        client.say(channel: "C1TUV5XFA", text: picker + " is picking up " + restaurant_name + "today.")
+        if waiting_on.empty?
           client.say(channel: "C1TUV5XFA", text: "All lunches are in!")
         else
           client.say(channel: "C1TUV5XFA", text: "WAITING ON: " + waiting_on.join(', '))
