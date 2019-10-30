@@ -31,7 +31,9 @@ module RayBot
             event_request = Net::HTTP::Get.new(event_uri.request_uri)
             event_response = meal_http.request(event_request)
             event_html = event_response.body.delete("\n")
-            my_order = event_html.match("Finalized Orders.*" + my_name + ".*?<td>(.*?)</td>")[1]
+            matches = event_html.match("Finalized Orders.*" + my_name + ".*?<td>(.*?)</td>")
+            break unless matches
+            my_order = matches[1]
           end
         end
 
