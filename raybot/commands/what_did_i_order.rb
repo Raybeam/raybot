@@ -32,7 +32,7 @@ module RayBot
             event_html = event_response.body.delete("\n")
             matches = event_html.match("Finalized Orders.*" + my_name + ".*?<td>(.*?)</td>")
             break unless matches
-            my_order = "```" + matches[1].gsub("&nbsp;", " ").gsub("\r<br />","\n") + "```"
+            my_order = matches[1].gsub("&nbsp;", " ").gsub("\r<br />","\n")
           end
         end
 
@@ -47,6 +47,10 @@ module RayBot
           return
         end
 
+        if my_order.include?("\n")
+          my_order = "```" + my_order + "```"
+        end
+          
         client.say(channel: data.channel, text: my_order)
       end
     end
