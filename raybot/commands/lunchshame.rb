@@ -47,7 +47,7 @@ module RayBot
         else
           client.say(channel: "C1TUV5XFA", text: "WAITING ON: " + waiting_on.join(', '))
         end
-        client.say(channel: "C1TUV5XFA", text: event_url))
+        client.say(channel: "C1TUV5XFA", text: event_url)
       end
     end
   end
