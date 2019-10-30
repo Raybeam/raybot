@@ -7,7 +7,7 @@ module RayBot
       match (/^.*(whatdidiorder).*$/) do |client, data, match|
         samaya = Samaya.new
 
-        my_name = client.store.users[data.user]["real_name"]
+        my_name = client.store.users[data.user]["last_name"]
         break unless my_name
 
         meal_event = samaya.todays_meal_event
