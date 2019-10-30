@@ -4,7 +4,7 @@ module RayBot
   module Commands
     class WhatDidIOrder < SlackRubyBot::Commands::Base
       match (/^.*(whatdidiorder).*$/) do |client, data, match|
-        client.say(channel: data.channel, text: data.user)
+        client.say(channel: data.channel, text: data)
         
         base_url = "http://samaya.raybeam.com/meal_events/lunch_list?end=2000-01-01&start="
         date = Time.now.strftime("%Y-%m-%d")
