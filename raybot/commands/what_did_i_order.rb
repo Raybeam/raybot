@@ -46,7 +46,7 @@ module RayBot
           client.say(channel: data.channel, text: "Couldn't find an order for " + my_name + " for today.")
         end
 
-        client.say(channel: data.channel, text: my_order)
+        client.say(channel: data.channel, text: my_order.gsub!("&nbsp;", ""))
       end
     end
   end
