@@ -42,8 +42,9 @@ module RayBot
           return
         end
         
-        unless my_order
+        unless my_order.length > 0
           client.say(channel: data.channel, text: "Couldn't find an order for " + my_name + " for today.")
+          return
         end
 
         client.say(channel: data.channel, text: my_order.gsub!("&nbsp;", " "))
