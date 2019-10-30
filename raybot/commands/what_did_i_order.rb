@@ -5,10 +5,8 @@ module RayBot
     class WhatDidIOrder < SlackRubyBot::Commands::Base
       match (/^.*(whatdidiorder).*$/) do |client, data, match|
       
-        my_name = client.store.users[data.user]["real_name"]
-        
-        client.say(channel: data.channel, text: "Looking for a lunch order for" + my_name)
-
+        my_name = client.store.users[data.user]["real_name"]        
+        client.say(channel: data.channel, text: "Looking for a lunch order for " + my_name)
         
         base_url = "http://samaya.raybeam.com/meal_events/lunch_list?end=2000-01-01&start="
         date = Time.now.strftime("%Y-%m-%d")
@@ -46,7 +44,7 @@ module RayBot
           client.say(channel: data.channel, text: "Couldn't find an order for " + my_name + " for today.")
         end
 
-        client.say(channel: data.channel, text: my_order.gsub!("&nbsp;", ""))
+        client.say(channel: data.channel, text: my_order.gsub!("&nbsp;", " "))
       end
     end
   end
