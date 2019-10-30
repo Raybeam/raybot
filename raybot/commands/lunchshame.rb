@@ -20,7 +20,8 @@ module RayBot
           if meal["start"] == date
             meal_today = true
             restaurant_name = meal["restaurant"] + " "
-            event_uri = URI.parse("http://samaya.raybeam.com" + meal["url"])
+            event_url = "http://samaya.raybeam.com" + meal["url"]
+            event_uri = URI.parse(event_url)
             event_http = Net::HTTP.new(event_uri.host, event_uri.port)
             event_request = Net::HTTP::Get.new(event_uri.request_uri)
             event_response = meal_http.request(event_request)
@@ -34,7 +35,7 @@ module RayBot
             end
           end
         end
-        
+
         unless meal_today
           client.say(channel: "C1TUV5XFA", text: "There is no lunch for today!")
           return
@@ -46,6 +47,7 @@ module RayBot
         else
           client.say(channel: "C1TUV5XFA", text: "WAITING ON: " + waiting_on.join(', '))
         end
+        client.say(channel: "C1TUV5XFA", text: event_url))
       end
     end
   end
