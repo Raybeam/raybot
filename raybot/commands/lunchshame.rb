@@ -5,9 +5,9 @@ module RayBot
   module Commands
     class LunchShame < SlackRubyBot::Commands::Base
       match (/^.*(lunchshame).*$/) do |client, data, match|
+        channel = "C1TUV5XFA"
         samaya = Samaya.new
 
-        channel = data.channel
         meal_event = samaya.todays_meal_event
         unless meal_event
           client.say(channel: channel, text: "There is no lunch for today!")
