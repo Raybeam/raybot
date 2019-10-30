@@ -4,11 +4,9 @@ require "redis"
 module RayBot
   module Commands
     class LorettaLunch < SlackRubyBot::Commands::Base
-      include Samaya
+      include RayBot::Commands::Samaya
 
       SPECIALS_URL = "http://lorettarestaurant.com/specials/?C=M;O=D"
-
-      channel = data.channel
 
       match (/^.*(lorettalunch).*$/) do |client, data, match|
         redis = Redis.new(url: ENV['REDISTOGO_URL'])

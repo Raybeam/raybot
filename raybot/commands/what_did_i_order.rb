@@ -3,7 +3,7 @@ require "net/http"
 module RayBot
   module Commands
     class WhatDidIOrder < SlackRubyBot::Commands::Base
-      include Samaya
+      include RayBot::Commands::Samaya
 
       match (/^.*(whatdidiorder).*$/) do |client, data, match|
         my_name = client.store.users[data.user]["real_name"]

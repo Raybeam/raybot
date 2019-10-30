@@ -3,7 +3,8 @@ require "net/http"
 module RayBot
   module Commands
     class LunchShame < SlackRubyBot::Commands::Base
-      include Samaya
+      include RayBot::Commands::Samaya
+
       match (/^.*(lunchshame).*$/) do |client, data, match|
         channel = data.channel
         meal_event = self.todays_meal_event
