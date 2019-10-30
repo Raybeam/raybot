@@ -3,51 +3,28 @@ require "net/http"
 module RayBot
   module Commands
     class LunchShame < SlackRubyBot::Commands::Base
+      include Samaya
       match (/^.*(lunchshame).*$/) do |client, data, match|
-        base_url = "http://samaya.raybeam.com/meal_events/lunch_list?end=2000-01-01&start="
-        date = Time.now.strftime("%Y-%m-%d")
-
-        meal_uri = URI.parse(base_url + date)
-        meal_http = Net::HTTP.new(meal_uri.host, meal_uri.port)
-        meal_request = Net::HTTP::Get.new(meal_uri.request_uri)
-        meal_response = meal_http.request(meal_request)
-        meals = JSON.parse(meal_response.body)
-
-        waiting_on = []
-        meal_today = false
-        restaurant_name = ""
-        for meal in meals
-          if meal["start"] == date
-            meal_today = true
-            restaurant_name = meal["restaurant"] + " "
-            event_url = "http://samaya.raybeam.com" + meal["url"]
-            event_uri = URI.parse(event_url)
-            event_http = Net::HTTP.new(event_uri.host, event_uri.port)
-            event_request = Net::HTTP::Get.new(event_uri.request_uri)
-            event_response = meal_http.request(event_request)
-            event_html = event_response.body.delete("\n")
-            picker = event_html.match('<span class="resource">(((?!span).)*)</span>')[1]
-            order_status = event_html.match("<table class='order-status'>((?!table).)*</table>")[0]
-            for order in order_status.split("<td>")
-              if (order.include? "first pending") && (not order.include? "Dong Soo Anderson-Song")
-                waiting_on.append(order.match('<a href=[^>]*>([^<]*)<')[1])
-              end
-            end
-          end
-        end
-
-        unless meal_today
-          client.say(channel: "C1TUV5XFA", text: "There is no lunch for today!")
+        channel = data.channel
+        meal_event = self.todays_meal_event
+        unless meal_event
+          client.say(channel: channel, text: "There is no lunch for today!")
           return
         end
 
-        client.say(channel: "C1TUV5XFA", text: picker + " is picking up " + restaurant_name + "today.")
+        restaurant_name = meal_event["restaurant"] + " "
+        event_url = self.get_meal_event_url(meal_event)
+        html = self.get_html_for_meal_event(meal_event)
+        picker = self.get_picker(html)
+        waiting_on = self.get_waiting_on(html)
+
+        client.say(channel: channel, text: picker + " is picking up " + restaurant_name + "today.")
         if waiting_on.empty?
-          client.say(channel: "C1TUV5XFA", text: "All lunches are in!")
+          client.say(channel: channel, text: "All lunches are in!")
         else
-          client.say(channel: "C1TUV5XFA", text: "WAITING ON: " + waiting_on.join(', '))
+          client.say(channel: channel, text: "WAITING ON: " + waiting_on.join(', '))
         end
-        client.say(channel: "C1TUV5XFA", text: event_url)
+        client.say(channel: channel, text: event_url)
       end
     end
   end

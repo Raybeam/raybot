@@ -3,54 +3,33 @@ require "net/http"
 module RayBot
   module Commands
     class WhatDidIOrder < SlackRubyBot::Commands::Base
+      include Samaya
+
       match (/^.*(whatdidiorder).*$/) do |client, data, match|
-      
-        my_name = client.store.users[data.user]["real_name"]        
-        
-        base_url = "http://samaya.raybeam.com/meal_events/lunch_list?end=2000-01-01&start="
-        date = Time.now.strftime("%Y-%m-%d")
+        my_name = client.store.users[data.user]["real_name"]
+        break unless my_name
 
-        meal_uri = URI.parse(base_url + date)
-        meal_http = Net::HTTP.new(meal_uri.host, meal_uri.port)
-        meal_request = Net::HTTP::Get.new(meal_uri.request_uri)
-        meal_response = meal_http.request(meal_request)
-        meals = JSON.parse(meal_response.body)
-
-        waiting_on = []
-        meal_today = false
-        restaurant_name = ""
-        my_order = ""
-        for meal in meals
-          if meal["start"] == date
-            meal_today = true
-            restaurant_name = meal["restaurant"] + " "
-            event_url = "http://samaya.raybeam.com" + meal["url"]
-            event_uri = URI.parse(event_url)
-            event_http = Net::HTTP.new(event_uri.host, event_uri.port)
-            event_request = Net::HTTP::Get.new(event_uri.request_uri)
-            event_response = meal_http.request(event_request)
-            event_html = event_response.body.delete("\n")
-            matches = event_html.match("Finalized Orders.*" + my_name + ".*?<td>(.*?)</td>")
-            break unless matches
-            my_order = matches[1].gsub("&nbsp;", " ").gsub("\r<br />","\n")
-          end
-        end
-
-        unless meal_today
+        meal_event = self.todays_meal_event
+        unless meal_event
           client.say(channel: data.channel, text: "There is no lunch for today!")
           return
         end
-        
-        unless my_order.length > 0
+
+        html = self.get_html_for_meal_event(meal_event)
+        break unless html
+
+        matches = html.match("Finalized Orders.*" + my_name + ".*?<td>(.*?)</td>")
+        unless matches && matches.length == 1
           client.say(channel: data.channel, text: "Couldn't find an order for " + my_name + " for today.")
           client.say(channel: data.channel, text: "Does your slack account 'Full name' match your name in Samaya?")
           return
         end
 
+        my_order = matches[1].gsub("&nbsp;", " ").gsub("\r<br />","\n")
         if my_order.include?("\n")
           my_order = "```" + my_order + "```"
         end
-          
+
         client.say(channel: data.channel, text: my_order)
       end
     end
