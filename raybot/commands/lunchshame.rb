@@ -16,9 +16,8 @@ module RayBot
 
         restaurant_name = meal_event["restaurant"] + " "
         event_url = samaya.get_meal_event_url(meal_event)
-        html = samaya.get_html_for_meal_event(meal_event)
-        picker = samaya.get_picker(html)
-        waiting_on = samaya.get_waiting_on(html)
+        picker = samaya.get_picker(meal_event)
+        waiting_on = samaya.get_waiting_on(meal_event)
 
         client.say(channel: channel, text: picker + " is picking up " + restaurant_name + "today.")
         if waiting_on.empty?

@@ -67,12 +67,13 @@ module RayBot
       BASE_URL + meal_event["url"]
     end
 
-    def get_picker(html)
+    def get_picker(meal_event)
+      html = get_html_for_meal_event(meal_event)
       html.match('<span class="resource">(((?!span).)*)</span>')[1]
     end
 
-    def get_waiting_on(html)
-      order_statuses = get_order_statuses(html)
+    def get_waiting_on(meal_event)
+      order_statuses = get_order_statuses(meal_event)
       pending_orders = order_statuses.split("<td>").select do |order|
         (order.include? "first pending") && (not order.include? "Dong Soo Anderson-Song")
       end
@@ -93,7 +94,8 @@ module RayBot
       JSON.parse(meal_response.body)
     end
 
-    def get_order_statuses(html)
+    def get_order_statuses(meal_event)
+      html = get_html_for_meal_event(meal_event)
       html.match("<table class='order-status'>((?!table).)*</table>")[0]
     end
   end

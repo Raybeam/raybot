@@ -8,7 +8,10 @@ module RayBot
         samaya = Samaya.new
 
         name = client.store.users[data.user]["profile"]["last_name"]
-        break unless name
+        unless name && name.length > 0
+          client.say(channel: data.channel, text: "Unable to find a last name associated with your slack account.")
+          return
+        end
 
         meal_event = samaya.todays_meal_event
         unless meal_event
@@ -26,7 +29,7 @@ module RayBot
         elsif order_status == "passed"
           client.say(channel: data.channel, text: "You passed on lunch today.")
           return
-        else
+        elsif order_status == "error" || order_status == "uninvited"
           client.say(channel: data.channel, text: "Couldn't find an order status for you.")
           client.say(channel: data.channel, text: "Does your slack account last name match your last name in Samaya?")
           return
