@@ -6,6 +6,7 @@ module RayBot
     class LunchShame < SlackRubyBot::Commands::Base
       match (/^.*(lunchshame).*$/) do |client, data, match|
         channel = "C1TUV5XFA"
+
         samaya = Samaya.new
 
         meal_event = samaya.todays_meal_event
