@@ -7,8 +7,8 @@ module RayBot
       match (/^.*(whatdidiorder).*$/) do |client, data, match|
         samaya = Samaya.new
 
-        my_name = client.store.users[data.user]["profile"]["last_name"]
-        break unless my_name
+        name = client.store.users[data.user]["profile"]["last_name"]
+        break unless name
 
         meal_event = samaya.todays_meal_event
         unless meal_event
@@ -16,22 +16,28 @@ module RayBot
           return
         end
 
-        html = samaya.get_html_for_meal_event(meal_event)
-        break unless html
-
-        matches = html.match("Finalized Orders.*" + my_name + ".*?<td>(.*?)</td>")
-        unless matches && matches.length > 0
-          client.say(channel: data.channel, text: "Couldn't find an order for " + my_name + " for today.")
-          client.say(channel: data.channel, text: "Does your slack account 'Full name' match your name in Samaya?")
+        order_status = samaya.get_order_status_for_name(meal_event, name)
+        if order_status == "ooo"
+          client.say(channel: data.channel, text: "You are OOO today.")
+          return
+        elsif order_status == "pending"
+          client.say(channel: data.channel, text: "You haven't decided yet.")
+          return
+        elsif order_status == "passed"
+          client.say(channel: data.channel, text: "You passed on lunch today.")
+          return
+        else
+          client.say(channel: data.channel, text: "Couldn't find an order status for you.")
+          client.say(channel: data.channel, text: "Does your slack account last name match your last name in Samaya?")
           return
         end
 
-        my_order = matches[1].gsub("&nbsp;", " ").gsub("\r<br />","\n")
-        if my_order.include?("\n")
-          my_order = "```" + my_order + "```"
+        order = samaya.get_final_order_for_name(meal_event, name)
+        if order.include?("\n")
+          order = "```" + order + "```"
         end
 
-        client.say(channel: data.channel, text: my_order)
+        client.say(channel: data.channel, text: order)
       end
     end
   end
