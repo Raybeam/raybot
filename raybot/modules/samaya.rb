@@ -32,13 +32,13 @@ module RayBot
     def get_order_status_for_name(meal_event, name)
       html = get_html_for_meal_event(meal_event)
       order_statuses = get_order_statuses(html)
-      matches = order_statuses.match("order-status.*?" + name + ".*?a.href");
+      matches = order_statuses.match("order-status.*?" + name + "(.*?)</tr>");
 
       unless matches && matches.length > 0
         return "uninvited"
       end
 
-      order_status = matches[0]
+      order_status = matches[1]
       if order_status.include? "third passed"
         return "passed"
       elsif order_status.include? "third pending"
