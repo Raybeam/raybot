@@ -8,6 +8,7 @@ module RayBot
     class LorettaLunch < SlackRubyBot::Commands::Base
       match (/^.*(lorettalunch).*$/) do |client, data, match|
         channel = "C1TUV5XFA"
+
         samaya = Samaya.new
         redis = Redis.new(url: ENV['REDISTOGO_URL'])
         loretta = Loretta.new
