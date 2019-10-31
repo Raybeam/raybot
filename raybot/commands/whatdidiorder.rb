@@ -4,7 +4,7 @@ require "raybot/modules/samaya"
 module RayBot
   module Commands
     class WhatDidIOrder < SlackRubyBot::Commands::Base
-      match (/^.*(what.*did.*i.*order).*$/) do |client, data, match|
+      match (/^.*([wW]hat.*did.*[iI].*order).*$/) do |client, data, match|
 
         samaya = Samaya.new
         channel = data.channel
