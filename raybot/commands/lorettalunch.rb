@@ -22,8 +22,8 @@ module RayBot
         special_url = loretta.lunch_special_today_url
         break unless special_url && special_url.length
 
-        client.say(channel: channel, text: meal_url)
-        redis.set(k, meal_url)
+        client.say(channel: channel, text: special_url)
+        redis.set(k, special_url)
       end
     end
   end
