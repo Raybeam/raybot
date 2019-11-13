@@ -11,7 +11,7 @@ module RayBot
           time = 0
         end
         redis.set(k, (time + 1).to_s)
-        client.say(channel: channel, text: time)
+        client.say(channel: data.channel, text: time)
       end
     end
   end
