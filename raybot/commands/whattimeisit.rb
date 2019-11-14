@@ -7,6 +7,7 @@ module RayBot
         redis = Redis.new(url: ENV['REDISTOGO_URL'])
         k = 'universal-time'
         rk = 'return-time'
+        right = 'C7NNT5EVB'
         time = (redis.get(k)).to_i
         unless time
           time = 0
@@ -19,7 +20,7 @@ module RayBot
           return_time = time + rand(20)
           redis.set(rk, return_time)
           post_office_message = "running to the post office - back at #{return_time}"
-          client.say(channel: data.channel, text: post_office_message)
+          client.say(channel: right, text: post_office_message)
         end
 
         break if still_at_the_post_office
