@@ -25,7 +25,7 @@ module RayBot
           return
         end
 
-        still_at_the_post_office = (redis.get(rk) && redis.get(rk) > time)
+        still_at_the_post_office = (redis.get(rk) && redis.get(rk).to_i > time)
         if still_at_the_post_office
           client.say(channel: data.channel, text: 'Still at the post office - be back soon.')
           return
