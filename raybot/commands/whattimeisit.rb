@@ -9,21 +9,26 @@ module RayBot
         rk = 'return-time'
         right = 'C7NNT5EVB'
         time = (redis.get(k)).to_i
+        post_office_mod
         unless time
           time = 0
         end
         redis.set(k, (time + 1).to_s)
 
         time_to_go_to_the_post_office = (time % 51 == 0)
-        still_at_the_post_office = (redis.get(rk) && redis.get(rk) > time)
         if time_to_go_to_the_post_office
           return_time = time + rand(20)
           redis.set(rk, return_time)
           post_office_message = "running to the post office - back at #{return_time}"
           client.say(channel: right, text: post_office_message)
+          return
         end
 
-        break if still_at_the_post_office
+        still_at_the_post_office = (redis.get(rk) && redis.get(rk) > time)
+        if still_at_the_post_office
+          client.say(channel: data.channel, text: 'Still at the post office - be back soon.')
+          return
+        end
 
         client.say(channel: data.channel, text: time)
       end
